@@ -210,3 +210,27 @@ For support and questions:
 ## 🔄 Version History
 
 - **v0.1.0** - Initial release with basic patient and doctor portal functionality
+
+  
+
+## 👨‍💻 Author
+
+# **Kotipalli Venkata Sriram**
+B.Tech Computer Science and Engineering (2023-27)
+IIIT Vadodara
+
+* GitHub: https://github.com/sriramkv3010
+* Email: [kotipallivenkatasriram@gmail.com](mailto:kotipallivenkatasriram@gmail.com)
+
+### About 
+
+Developed this Healthcare Management System as part of Software Engineering coursework CS 263, focusing on full-stack development, system design, and real-time healthcare communication tools and software engineering documentation.
+
+Interested in:
+
+* Full-stack system development
+* AI for healthcare
+* Medical Imaging
+* Cardiovascular modeling
+* Point-of-care medical devices
+* Distributed systems and cloud applications
