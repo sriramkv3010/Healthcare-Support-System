@@ -1,4 +1,4 @@
-# Healthcare Management System
+# Healthcare Management System - CS 263 Project 
 
 A comprehensive healthcare management system built with Next.js, featuring separate portals for patients and doctors with real-time communication capabilities.
 
