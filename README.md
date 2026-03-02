@@ -215,7 +215,7 @@ For support and questions:
 
 ## 👨‍💻 Author
 
-# **Kotipalli Venkata Sriram**
+**Kotipalli Venkata Sriram**
 B.Tech Computer Science and Engineering (2023-27)
 IIIT Vadodara
 
@@ -225,12 +225,3 @@ IIIT Vadodara
 ### About 
 
 Developed this Healthcare Management System as part of Software Engineering coursework CS 263, focusing on full-stack development, system design, and real-time healthcare communication tools and software engineering documentation.
-
-Interested in:
-
-* Full-stack system development
-* AI for healthcare
-* Medical Imaging
-* Cardiovascular modeling
-* Point-of-care medical devices
-* Distributed systems and cloud applications
