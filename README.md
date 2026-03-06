@@ -1,14 +1,14 @@
-# Healthcare Management System - CS 263 Project 
+# Healthcare Management System 
 
 A comprehensive healthcare management system built with Next.js, featuring separate portals for patients and doctors with real-time communication capabilities.
 
-## 🏥 Project Overview
+##  Project Overview
 
 This healthcare management system consists of two main applications:
 - **Patient Portal**: For patients to manage appointments, view prescriptions, and communicate with doctors
 - **Doctor Portal**: For healthcare providers to manage patients, appointments, prescriptions, and medical reports
 
-## 🚀 Features
+##  Features
 
 ### Patient Portal
 - Patient registration and authentication
@@ -29,6 +29,18 @@ This healthcare management system consists of two main applications:
 - AI assistant for medical queries
 - Admin dashboard for doctor approval
 
+### Chat Module
+- Real-time messaging between users
+- Message storage using database models
+- Express-based chat backend
+
+### Documentation
+Includes detailed software engineering artifacts:
+- Software Requirement Specification (SRS)
+- Data Flow Diagrams (DFD Level 0–2)
+- UML Diagrams (Class, Activity, Sequence, State)
+- Architectural viewpoints
+
 ## 🛠 Tech Stack
 
 - **Frontend**: Next.js 15, React 19, Tailwind CSS
@@ -40,27 +52,39 @@ This healthcare management system consists of two main applications:
 - **File Upload**: Formidable, Multer
 - **PDF Generation**: jsPDF
 
-## 📁 Project Structure
+##  Project Structure
 
 ```
 healthcare-management-system/
-├── patient-portal/          # Patient-facing application
+├── patient-portal/         # Patient-facing application
 │   ├── app/                # Next.js app directory
 │   ├── components/         # Reusable UI components
-│   ├── lib/               # Utility libraries
-│   ├── models/            # Database models
-│   └── utils/             # Helper functions
+│   ├── lib/                # Utility libraries
+│   ├── models/             # Database models
+│   └── utils/              # Helper functions
 ├── doctor-portal/          # Doctor-facing application
-│   ├── app/               # Next.js app directory
-│   ├── components/        # Reusable UI components
-│   ├── hooks/             # Custom React hooks
-│   ├── lib/               # Utility libraries
-│   ├── models/            # Database models
-│   └── scripts/           # Build and utility scripts
-└── README.md              # This file
+│   ├── app/                # Next.js app directory
+│   ├── components/         # Reusable UI components
+│   ├── hooks/              # Custom React hooks
+│   ├── lib/                # Utility libraries
+│   ├── models/             # Database models
+│   └── scripts/            # Build and utility scripts
+├── chat/                   # Real Time Chat Service
+│   ├── controllers/        # Request handlers for chat operations
+│   ├── models/             # Message and chat-related database models
+│   ├── routes/             # Express API routes for messaging
+│   ├── app.js              # Entry point for the chat server
+├── Documentation/          # Software engineering artifacts
+│   ├── Activity Diagrams/  # Activity diagrams for system workflows
+│   ├── DFD/                # Data Flow Diagrams (Level 0–2)
+│   ├── Viewpoints/         # Architectural viewpoints and design docs
+│   ├── Software Requirement Specification.pdf
+└── package.json            # Project dependencies and scripts
+└── SETUP.md                # Installation and setup instructions
+└── README.md               # This file
 ```
 
-## 🚦 Getting Started
+##  Getting Started
 
 ### Prerequisites
 
@@ -147,14 +171,14 @@ The system uses the following main models:
 - **Prescription**: Medical prescriptions
 - **MedicalReport**: Patient medical reports
 
-## 🔐 Authentication & Security
+##  Authentication & Security
 
 - JWT-based authentication
 - Password hashing with bcryptjs
 - NextAuth.js for session management
 - Role-based access control (Patient/Doctor/Admin)
 
-## 🌐 API Endpoints
+##  API Endpoints
 
 ### Patient Portal APIs
 - `/api/auth/*` - Authentication endpoints
@@ -170,7 +194,7 @@ The system uses the following main models:
 - `/api/reports/*` - Medical report management
 - `/api/chat/*` - Real-time communication
 
-## 🚀 Deployment
+##  Deployment
 
 ### Production Build
 
@@ -189,7 +213,7 @@ The system uses the following main models:
 
 Ensure all environment variables are properly configured in your deployment platform.
 
-## 🤝 Contributing
+##  Contributing
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
@@ -197,27 +221,26 @@ Ensure all environment variables are properly configured in your deployment plat
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-## 📝 License
+##  License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
 
-## 🆘 Support
+##  Support
 
 For support and questions:
 - Create an issue in the GitHub repository
 - Contact the development team
 
-## 🔄 Version History
+##  Version History
 
 - **v0.1.0** - Initial release with basic patient and doctor portal functionality
 
   
 
-## 👨‍💻 Author
+##  Author
 
 **Kotipalli Venkata Sriram**
-B.Tech Computer Science and Engineering (2023-27)
-IIIT Vadodara
+B.Tech, Computer Science and Engineering (2023-27), IIIT Vadodara
 
 * GitHub: https://github.com/sriramkv3010
 * Email: [kotipallivenkatasriram@gmail.com](mailto:kotipallivenkatasriram@gmail.com)
