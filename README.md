@@ -41,7 +41,7 @@ Includes detailed software engineering artifacts:
 - UML Diagrams (Class, Activity, Sequence, State)
 - Architectural viewpoints
 
-## 🛠 Tech Stack
+##  Tech Stack
 
 - **Frontend**: Next.js 15, React 19, Tailwind CSS
 - **Backend**: Next.js API Routes, Node.js
@@ -150,7 +150,7 @@ Access the applications:
 - Patient Portal: http://localhost:8000
 - Doctor Portal: http://localhost:3000
 
-## 🔧 Development
+##  Development
 
 ### Available Scripts
 
