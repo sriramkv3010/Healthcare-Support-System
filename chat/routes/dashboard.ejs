@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HealthChat - Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+
+  <body class="bg-gray-100 min-h-screen">
+    <nav class="bg-white shadow">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16">
+          <div class="flex">
+            <div class="flex-shrink-0 flex items-center">
+              <h1 class="text-xl font-bold text-blue-600">HealthChat</h1>
+            </div>
+          </div>
+          <div class="flex items-center">
+            <div class="flex-shrink-0">
+              <div class="flex items-center space-x-2">
+                <span class="text-sm font-medium text-gray-700"> <%= user.name %> (<%= user.role %>) </span>
+                <img class="h-8 w-8 rounded-full object-cover" src="/<%= user.image %>" alt="Profile">
+                <a href="/logout"
+                  class="ml-4 px-3 py-2 rounded-md text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                  Logout </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+      <div class="bg-white overflow-hidden shadow rounded-lg">
+        <div class="px-4 py-5 sm:p-6">
+          <h2 class="text-lg font-medium text-gray-900 mb-4">
+            <%= user.role === 'patient' ? 'Available Healthcare Providers' : 'Your Patients' %> </h2>
+          <% if(users.length === 0) { %> <p class="text-gray-500">
+            <%= user.role === 'patient' ? 'No healthcare providers available at the moment.' : 'You have no patients yet.' %>
+          </p> <% } else { %> <ul class="divide-y divide-gray-200"> <% users.forEach(userData => { %> <li
+              class="py-4 flex items-center justify-between">
+              <div class="flex items-center">
+                <img class="h-10 w-10 rounded-full object-cover" src="/<%= userData.image %>"
+                  alt="<%= userData.name %>">
+                <div class="ml-3">
+                  <p class="text-sm font-medium text-gray-900"><%= userData.name %></p>
+                  <p class="text-sm text-gray-500"><%= userData.email %></p>
+                </div>
+              </div>
+              <div class="flex items-center">
+                <span class="mr-2 flex h-2 w-2 relative">
+                  <span
+                    class="<%= userData.is_online === '1' ? 'bg-green-400' : 'bg-gray-300' %> animate-ping absolute inline-flex h-full w-full rounded-full opacity-75"></span>
+                  <span
+                    class="<%= userData.is_online === '1' ? 'bg-green-500' : 'bg-gray-400' %> relative inline-flex rounded-full h-2 w-2"></span>
+                </span>
+                <span class="text-xs text-gray-500"><%= userData.is_online === '1' ? 'Online' : 'Offline' %></span>
+                <a href="/chat/<%= userData._id %>"
+                  class="ml-4 inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                  Chat </a>
+              </div>
+            </li> <% }) %> </ul> <% } %>
+        </div>
+      </div>
+    </div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      const socket = io();
+
+      // Connect user to socket
+      socket.emit('user_connected', '<%= user._id %>');
+
+      // Listen for user status changes
+      socket.on('user_status', function (data) {
+        const userStatusIndicator = document.querySelector(`[data-user-id="${data.user_id}"] .status-indicator`);
+        if (userStatusIndicator) {
+          if (data.status === '1') {
+            userStatusIndicator.classList.remove('bg-gray-400');
+            userStatusIndicator.classList.add('bg-green-500');
+            userStatusIndicator.nextElementSibling.textContent = 'Online';
+          } else {
+            userStatusIndicator.classList.remove('bg-green-500');
+            userStatusIndicator.classList.add('bg-gray-400');
+            userStatusIndicator.nextElementSibling.textContent = 'Offline';
+          }
+        }
+      });
+    </script>
+  </body>
+
+</html>

@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HealthChat - Chat with <%= receiver.name %></title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+
+  <body class="bg-gray-100 min-h-screen flex flex-col">
+    <nav class="bg-white shadow">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16">
+          <div class="flex">
+            <div class="flex-shrink-0 flex items-center">
+              <a href="/dashboard" class="text-xl font-bold text-blue-600">HealthChat</a>
+            </div>
+          </div>
+          <div class="flex items-center">
+            <div class="flex-shrink-0">
+              <div class="flex items-center space-x-2">
+                <span class="text-sm font-medium text-gray-700"> <%= user.name %> (<%= user.role %>) </span>
+                <img class="h-8 w-8 rounded-full object-cover" src="/<%= user.image %>" alt="Profile">
+                <a href="/dashboard"
+                  class="ml-2 px-3 py-2 rounded-md text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+                  Back </a>
+                <a href="/logout"
+                  class="px-3 py-2 rounded-md text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                  Logout </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <div class="flex-1 flex flex-col max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div class="bg-white shadow rounded-lg flex flex-col flex-1 overflow-hidden">
+        <!-- Chat header -->
+        <div class="border-b border-gray-200 px-4 py-4 sm:px-6 flex items-center">
+          <div class="flex items-center">
+            <img class="h-10 w-10 rounded-full object-cover" src="/<%= receiver.image %>" alt="<%= receiver.name %>">
+            <div class="ml-3">
+              <p class="text-sm font-medium text-gray-900"><%= receiver.name %></p>
+              <p class="text-xs text-gray-500"><%= receiver.role %></p>
+            </div>
+          </div>
+          <div class="ml-4 flex items-center">
+            <span class="mr-2 flex h-2 w-2 relative">
+              <span
+                class="<%= receiver.is_online === '1' ? 'bg-green-400' : 'bg-gray-300' %> animate-ping absolute inline-flex h-full w-full rounded-full opacity-75"></span>
+              <span
+                class="<%= receiver.is_online === '1' ? 'bg-green-500' : 'bg-gray-400' %> relative inline-flex rounded-full h-2 w-2"></span>
+            </span>
+            <span class="text-xs text-gray-500"
+              id="receiver-status"><%= receiver.is_online === '1' ? 'Online' : 'Offline' %></span>
+          </div>
+        </div>
+        <!-- Chat messages -->
+        <div class="flex-1 p-4 overflow-y-auto space-y-4" id="chat-messages" style="max-height: calc(100vh - 250px);">
+          <% if(chats.length > 0) { %> <% chats.forEach(chat => { %> <div
+            class="flex <%= chat.sender_id.toString() === user._id.toString() ? 'justify-end' : 'justify-start' %>">
+            <div
+              class="<%= chat.sender_id.toString() === user._id.toString() ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-800' %> rounded-lg py-2 px-4 max-w-md">
+              <p><%= chat.message %></p>
+              <p
+                class="text-xs <%= chat.sender_id.toString() === user._id.toString() ? 'text-blue-100' : 'text-gray-500' %> mt-1">
+                <%= new Date(chat.createdAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) %> </p>
+            </div>
+          </div> <% }) %> <% } else { %> <div class="text-center text-gray-500 py-8">
+            <p>No messages yet. Start the conversation!</p>
+          </div> <% } %> </div>
+        <!-- Chat input -->
+        <div class="border-t border-gray-200 px-4 py-4 sm:px-6">
+          <form id="chat-form" class="flex">
+            <input type="text" id="message-input" placeholder="Type your message..."
+              class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+              required>
+            <button type="submit"
+              class="ml-4 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+              Send </button>
+          </form>
+        </div>
+      </div>
+    </div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      const socket = io();
+      const senderId = '<%= user._id %>';
+      const receiverId = '<%= receiver._id %>';
+      const chatMessages = document.getElementById('chat-messages');
+      const chatForm = document.getElementById('chat-form');
+      const messageInput = document.getElementById('message-input');
+
+      // Create a unique chat room ID
+      const chatRoomId = [senderId, receiverId].sort().join('-');
+
+      // Connect user to socket and join chat room
+      socket.emit('user_connected', senderId);
+      socket.emit('join_chat', chatRoomId);
+
+      // Send message
+      chatForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+        const message = messageInput.value.trim();
+
+        if (!message) return;
+
+        // Display message immediately in UI
+        addMessage(senderId, message, new Date());
+
+        // Emit message to server
+        socket.emit('send_message', {
+          sender_id: senderId,
+          receiver_id: receiverId,
+          message: message
+        });
+
+        // Clear input
+        messageInput.value = '';
+      });
+
+      // Listen for new messages
+      socket.on('new_message', function (data) {
+        // Only add messages from the other person (our own messages are added immediately)
+        if (data.sender_id !== senderId) {
+          addMessage(data.sender_id, data.message, new Date(data.createdAt));
+        }
+      });
+
+      // Listen for user status changes
+      socket.on('user_status', function (data) {
+        if (data.user_id === receiverId) {
+          const statusIndicator = document.querySelector('#receiver-status');
+          const statusDot = statusIndicator.previousElementSibling.lastElementChild;
+          const statusPing = statusIndicator.previousElementSibling.firstElementChild;
+
+          if (data.status === '1') {
+            statusIndicator.textContent = 'Online';
+            statusDot.classList.remove('bg-gray-400');
+            statusDot.classList.add('bg-green-500');
+            statusPing.classList.remove('bg-gray-300');
+            statusPing.classList.add('bg-green-400');
+          } else {
+            statusIndicator.textContent = 'Offline';
+            statusDot.classList.remove('bg-green-500');
+            statusDot.classList.add('bg-gray-400');
+            statusPing.classList.remove('bg-green-400');
+            statusPing.classList.add('bg-gray-300');
+          }
+        }
+      });
+
+      // Function to add message to UI
+      function addMessage(sender, message, timestamp) {
+        const isCurrentUser = sender === senderId;
+
+        const messageContainer = document.createElement('div');
+        messageContainer.className = `flex ${isCurrentUser ? 'justify-end' : 'justify-start'}`;
+
+        const messageElement = document.createElement('div');
+        messageElement.className = `${isCurrentUser ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-800'} rounded-lg py-2 px-4 max-w-md`;
+
+        const messageText = document.createElement('p');
+        messageText.textContent = message;
+
+        const messageTime = document.createElement('p');
+        messageTime.className = `text-xs ${isCurrentUser ? 'text-blue-100' : 'text-gray-500'} mt-1`;
+        messageTime.textContent = timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+        messageElement.appendChild(messageText);
+        messageElement.appendChild(messageTime);
+        messageContainer.appendChild(messageElement);
+
+        chatMessages.appendChild(messageContainer);
+
+        // Scroll to bottom
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+      }
+
+      // Scroll to bottom on load
+      window.onload = function () {
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+      };
+    </script>
+  </body>
+
+</html>
